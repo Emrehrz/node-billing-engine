@@ -1,5 +1,7 @@
 import express from 'express';
 import { logger } from './logger';
+import authRoutes from './routes/auth.routes';
+import subscriptionRoutes from './routes/subscription.routes';
 
 export const app = express();
 
@@ -16,6 +18,10 @@ app.use((req, res, next) => {
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+// Routes
+app.use('/auth', authRoutes);
+app.use('/subscriptions', subscriptionRoutes);
 
 // Basic 404 handler
 app.use((req, res) => {
