@@ -14,23 +14,8 @@ export const validate =
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        // Collect human-readable messages for all failed fields
-        const messages = error.issues.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
-
-        return res.status(400).json({
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: `Validation failed: ${messages}`,
-          },
-        });
+        return next(error);
       }
-      
-      logger.error({ error }, 'Unexpected error in validation middleware');
-      return res.status(500).json({
-        error: {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'An unexpected error occurred',
-        },
-      });
+      return next(error);
     }
   };

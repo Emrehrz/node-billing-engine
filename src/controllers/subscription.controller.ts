@@ -1,39 +1,23 @@
 import { Request, Response } from 'express';
-import { AppError, SubscriptionService } from '../services/subscription.service';
-import { logger } from '../logger';
+import { createSubscriptionService } from '../services/subscription.service';
+import { FakePaymentProvider } from '../services/payment.provider';
+import { asyncHandler } from '../utils/asyncHandler';
 
-export const createSubscription = async (req: Request, res: Response) => {
-  try {
-    const userId = (req as any).user.id;
-    const { planId } = req.body;
+const subscriptionService = createSubscriptionService(FakePaymentProvider);
 
-    const result = await SubscriptionService.createSubscription(userId, planId);
-    
-    res.status(201).json(result);
-  } catch (error) {
-    if (error instanceof AppError) {
-      return res.status(error.statusCode).json({
-        error: {
-          code: error.code,
-          message: error.message,
-        },
-      });
-    }
+export const createSubscription = asyncHandler(async (req: Request, res: Response) => {
+  const userId = (req as any).user.id;
+  const { planId } = req.body;
 
-    logger.error({ error }, 'Unexpected error creating subscription');
-    res.status(500).json({
-      error: {
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'An unexpected error occurred',
-      },
-    });
-  }
-};
+  const result = await subscriptionService.createSubscription(userId, planId);
+  
+  res.status(201).json(result);
+});
 
-export const getSubscription = async (req: Request, res: Response) => {
+export const getSubscription = asyncHandler(async (req: Request, res: Response) => {
   // TODO: Phase 5 - Implement fetch logic
   res.status(200).json({
     id: req.params.id,
     status: 'ACTIVE',
   });
-};
+});
