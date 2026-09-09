@@ -10,6 +10,12 @@ export interface Subscription {
 }
 
 export const SubscriptionRepository = {
+  async getSubscriptionById(id: string): Promise<Subscription | null> {
+    const result = await query('SELECT * FROM subscriptions WHERE id = $1', [id]);
+    if (result.rows.length === 0) return null;
+    return result.rows[0];
+  },
+
   async hasActiveOrPendingSubscription(userId: string): Promise<boolean> {
     const result = await query(
       `SELECT 1 FROM subscriptions WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE') LIMIT 1`,

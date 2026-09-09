@@ -7,6 +7,19 @@ import { PaymentProvider } from './payment.provider';
 import { AppError } from '../utils/AppError';
 
 export const createSubscriptionService = (paymentProvider: PaymentProvider) => ({
+  async getSubscription(userId: string, subscriptionId: string) {
+    const subscription = await SubscriptionRepository.getSubscriptionById(subscriptionId);
+    if (!subscription) {
+      throw new AppError('SUBSCRIPTION_NOT_FOUND', 404, 'Subscription not found.');
+    }
+
+    if (subscription.user_id !== userId) {
+      throw new AppError('FORBIDDEN', 403, 'You do not have access to this subscription.');
+    }
+
+    return subscription;
+  },
+
   async createSubscription(userId: string, planId: string) {
     const plan = await PlanRepository.getPlanById(planId);
     if (!plan) {

@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
+import { AuthService } from '../services/auth.service';
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  // TODO: Phase 3/4 - Implement business logic, db operations
-  res.status(201).json({
-    id: 'placeholder-uuid',
-    email: req.body.email,
-  });
+  const { email, password } = req.body;
+  const user = await AuthService.register(email, password);
+  res.status(201).json(user);
 });
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
-  // TODO: Phase 3/4 - Implement login logic and JWT generation
-  res.status(200).json({
-    accessToken: 'placeholder-jwt',
-  });
+  const { email, password } = req.body;
+  const result = await AuthService.login(email, password);
+  res.status(200).json(result);
 });

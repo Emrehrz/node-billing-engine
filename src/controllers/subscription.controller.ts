@@ -15,9 +15,10 @@ export const createSubscription = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getSubscription = asyncHandler(async (req: Request, res: Response) => {
-  // TODO: Phase 5 - Implement fetch logic
-  res.status(200).json({
-    id: req.params.id,
-    status: 'ACTIVE',
-  });
+  const userId = (req as any).user.id;
+  const subscriptionId = req.params.id as string;
+
+  const subscription = await subscriptionService.getSubscription(userId, subscriptionId);
+
+  res.status(200).json(subscription);
 });
