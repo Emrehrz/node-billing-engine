@@ -77,6 +77,8 @@ describe('Subscription API', () => {
       expect(res.body.subscription.status).toBe('ACTIVE');
       expect(res.body.subscription.user_id).toBe(userId1);
       expect(res.body.payment.status).toBe('SUCCEEDED');
+      expect(res.body.payment.amount).toBe('9.99');
+      expect(res.body.payment.currency).toBe('USD');
     });
 
     it('should return 409 for duplicate active subscription', async () => {

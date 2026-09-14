@@ -2,3 +2,4 @@ plans/*
 node_modules/*
 .env
 dist/*
+.vscode/
